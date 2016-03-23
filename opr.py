@@ -8,14 +8,15 @@ opr_A [teams x teams] = matrix indicating how many times a team
     was a member of an alliance with another team
 opr_b [teams] = matrix with the total scores by team for every match
     they were in
-L = factored matrix
+L = Lower triangular matrix
 teams = unique list of teams used to index matrices
 """
 def matrices(teams, matches):
     opr_A = [[0]*len(teams) for _ in xrange(len(teams))]
 
     opr_b = [0]*len(teams)
-
+    dpr_b = [0]*len(teams)
+    
     for match in matches:
         r1 = teams.index(match.red.teams[0])
         r2 = teams.index(match.red.teams[1])
@@ -39,7 +40,12 @@ def matrices(teams, matches):
         opr_b[b1] += bs
         opr_b[b2] += bs
 
-    return getL(opr_A), opr_b
+        dpr_b[r1] += bs
+        dpr_b[r2] += bs
+        dpr_b[b1] += rs
+        dpr_b[b2] += rs
+
+    return getL(opr_A), opr_b, dpr_b
 
 """
 Original source pulled json from thebluealliance, this
@@ -108,7 +114,7 @@ def parseDoc(url):
     return teams, matches
 
 """
-factor the opr matrix
+Get the lower triangular
 """
 def getL(m):
     final = [[0.0]*len(m) for _ in xrange(len(m))]
@@ -175,12 +181,13 @@ class Match():
 def main():
     teams, matches = parseDoc('http://scoring.pennfirst.org/ftc/Match_Results_East_Super-Regional_Hopper.html')
 
-    opr_L, opr_b = matrices(teams, matches)
+    opr_L, opr_b, dpr_b = matrices(teams, matches)
 
     opr_x = cholesky(opr_L, opr_b)
+    dpr_x = cholesky(opr_L, dpr_b)
 
     for index in range (0,len(opr_x)):
-        print("%s,%f" % (teams[index], opr_x[index]))
+        print("%s,%f,%f" % (teams[index], opr_x[index], dpr_x[index]))
 
 
 if __name__ == '__main__':
