@@ -174,6 +174,8 @@ def forwardSubstitute(m,n):
 
 """
 linear algebra magic
+solve L^Tx = y for x (m = L^T and n = y)
+L^T is transpose of L or Upper diagonal
 """
 def backSubstitute(m,n):
     final = list(n)
@@ -190,7 +192,9 @@ def transpose(arr):
     return [[arr[y][x] for y in xrange(len(arr))] for x in xrange(len(arr[0]))]
 
 """
-linear algebra magic
+A = LL^T
+Ly = b (forwardSubstitute)
+L^Tx = y (backSubstitute)
 """
 def cholesky(L,b):
     y = forwardSubstitute(L, b)
