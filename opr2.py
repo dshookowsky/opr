@@ -106,12 +106,12 @@ def parseDoc(url):
                 continue
 
             redTeams = pq(cells[2]).text()
-            r1 = redTeams.split(' ')[0]
-            r2 = redTeams.split(' ')[1]
+            r1 = redTeams.split(' ')[0].replace('*', '')
+            r2 = redTeams.split(' ')[1].replace('*', '')
 
             blueTeams = pq(cells[3]).text()
-            b1 = blueTeams.split(' ')[0]
-            b2 = blueTeams.split(' ')[1]
+            b1 = blueTeams.split(' ')[0].replace('*', '')
+            b2 = blueTeams.split(' ')[1].replace('*', '')
 
             currentMatch = Match()
             currentMatch.matchId = matchId
@@ -223,7 +223,8 @@ class Match():
 
 def main():
     # find match data here http://scoring.pennfirst.org/ftc/
-    teams, matches = parseDoc('http://scoring.pennfirst.org/ftc/MatchResultsDetails_East_Super-Regional_Hopper.html')
+    #teams, matches = parseDoc(http://www.ftcpenn.org/ftc-events/2016-2017-season/south-central-pennsylvania-regional-qualifying-tournament/match-results-details')
+    teams, matches = parseDoc('http://scoring.ftcpenn.org/cache/MatchResultsDetails_Diamond_State_FTC_Championship.html')
 
     opr_L, opr_b, dpr_b, ar_b, tr_b, er_b, pr_b  = matrices(teams, matches)
 
